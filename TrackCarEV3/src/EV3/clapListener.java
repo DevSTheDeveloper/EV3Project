@@ -19,10 +19,9 @@ public class clapListener {
         LCD.clear();
         LCD.drawString("Listening for claps...", 0, 0);
 
-        while (true) {
-            // Listen for a clap
+        while (true) { //listening for the clap
             clapFilter.fetchSample(sample, 0);
-            if (sample[0] == 1.0f) { // Clap detected!
+            if (sample[0] == 1.0f) { 
                 LCD.clear();
                 LCD.drawString("CLAP DETECTED!", 0, 2);
                 Thread.sleep(500); //prevent system overload for half a second 
