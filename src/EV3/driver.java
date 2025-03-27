@@ -1,5 +1,6 @@
 package EV3;
-//by devannsh
+//by Devannsh Sehgal
+
 import lejos.hardware.Button;
 
 public class driver {
@@ -16,14 +17,16 @@ public class driver {
     public void driverLoop() {
         motorControlBehavior.startMotors();
 
-        while (true) {
+        while (true) { 
+            //check for sound and obstacle detection
             soundDetectionBehavior.checkSound();
             obstacleDetectionBehavior.checkObstacle();
-            if (Button.ESCAPE.isDown()) { //keep checking if exit button has been pressed
-                System.out.println("Escape pressed. Exiting program...");
+
+            if (Button.ESCAPE.isDown()) { //exit
+                System.out.println("Program Terminated");
                 break; 
             }
-        } //I have closed the motors in the individual behaviour classes
+        }
     }
 
     public static void main(String[] args) {

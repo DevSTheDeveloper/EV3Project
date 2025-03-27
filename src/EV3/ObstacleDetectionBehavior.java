@@ -1,5 +1,6 @@
 package EV3;
-//by devannsh and arshiya 
+// by devannsh and Arshiya tested by Patrick
+
 import lejos.hardware.sensor.EV3UltrasonicSensor;
 
 public class ObstacleDetectionBehavior {
@@ -18,7 +19,7 @@ public class ObstacleDetectionBehavior {
             motorControlBehavior.stopMotors();
             System.out.println("Obstacle detected. Stopping.");
             try {
-                Thread.sleep(1000);
+                Thread.sleep(1000); //Wait for 1 second after obstacle - keep checking via thread
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }

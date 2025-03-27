@@ -1,5 +1,6 @@
 package EV3;
-//by devannsh
+// by devannsh
+
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.MotorPort;
 
@@ -25,10 +26,10 @@ public class MotorControlBehavior {
     }
 
     public void rotateSlowly() {
-        leftMotor.setSpeed(150);  // Reduced speed for a smooth, slow turn
+        leftMotor.setSpeed(150);  //reduced speed for a smooth, slow turn
         rightMotor.setSpeed(150);
-        leftMotor.rotate(350, true);  // Rotate 360 degrees (180-degree turn)
-        rightMotor.rotate(-350);      // Opposite direction for right motor
+        leftMotor.rotate(350, true);  //rotate 350 (approx 180-degree turn after testing)
+        rightMotor.rotate(-350);      //opposite direction for right motor
         leftMotor.setSpeed(300);
         rightMotor.setSpeed(300);
     }

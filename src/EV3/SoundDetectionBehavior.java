@@ -1,7 +1,7 @@
 package EV3;
 import lejos.hardware.sensor.NXTSoundSensor;
 import lejos.robotics.SampleProvider;
-
+//by devannsh 
 public class SoundDetectionBehavior {
     private NXTSoundSensor soundSensor;
     private SampleProvider soundSampleProvider;
@@ -22,19 +22,19 @@ public class SoundDetectionBehavior {
             System.out.println("Clap detected! Stopping motors.");
             motorControlBehavior.stopMotors();
             try {
-                Thread.sleep(5000);
+                Thread.sleep(5000); 
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
             System.out.println("Rotating slowly...");
-            motorControlBehavior.rotateSlowly();
+            motorControlBehavior.rotateSlowly(); 
             try {
-                Thread.sleep(2000);
+                Thread.sleep(2000); //wait
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
             System.out.println("Resuming movement.");
-            motorControlBehavior.startMotors();
+            motorControlBehavior.startMotors(); 
         }
     }
 }
