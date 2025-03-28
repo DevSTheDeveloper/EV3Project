@@ -1,71 +1,79 @@
 package EV3;
 
-import lejos.hardware.port.MotorPort;
-import lejos.hardware.sensor.EV3ColorSensor;
-import lejos.hardware.sensor.EV3UltrasonicSensor;
-import lejos.hardware.sensor.SensorMode;
-import lejos.robotics.Color;
-import lejos.robotics.SampleProvider;
-import lejos.robotics.navigation.MovePilot;
-import lejos.robotics.subsumption.Behavior;
+public class TurnBehavior {
+    private static final int ROTATION_ANGLE = 90;  // Desired turn angle (in degrees)
+    private boolean hasTurned = false;
+    private MotorControlBehavior motorControlBehavior;
+    private ColorDetectionBehavior colorDetectionBehavior;
 
-public class TurnBehavior implements Behavior {
-	//constants for rotation and activation distance
-	final static int ARC_INCREMENT = 5;
-	final static int APPROACH_DISTANCE = 15;
-	
-	private int turnDirection = 1; //left = 1; right = -1;
-	
-	private boolean suppressed = false;
-    private MovePilot pilot;
-   
-    //define sensors and providers
-    private EV3UltrasonicSensor ultrasonicSensor = new EV3UltrasonicSensor(MotorPort.A);
-    private SampleProvider distanceProvider = ultrasonicSensor.getDistanceMode(); 
-    
-    private EV3ColorSensor colorSensor = new EV3ColorSensor(MotorPort.B);
-    private SensorMode colorProvider = colorSensor.getColorIDMode();
-    
-    //samples - could theoretically be packed into one?
-    float[] distanceSample = new float[1];
-    float[] colorSample = new float[1];
-    
-    @Override
-    public boolean takeControl() {
-    	//fetch samples
-    	distanceProvider.fetchSample(distanceSample, 0);
-    	colorProvider.fetchSample(colorSample, 0);
-    	
-    	//cast colour to integer
-    	int currentColor = (int) colorSample[0];
-    	//close to wall or over a directional colour
-        return distanceSample[0] <= APPROACH_DISTANCE 
-        		|| currentColor == Color.YELLOW
-        		|| currentColor == Color.PINK;
+    public TurnBehavior(MotorControlBehavior motorControlBehavior, ColorDetectionBehavior colorDetectionBehavior) {
+        this.motorControlBehavior = motorControlBehavior;
+        this.colorDetectionBehavior = colorDetectionBehavior;
     }
-	
-    @Override
-    public void action() {
-        suppressed = false;
-        while (!suppressed) {
-        	distanceProvider.fetchSample(distanceSample, 0);
-        	colorProvider.fetchSample(colorSample, 0);
-        	
-        	//yellow for right, pink for left
-        	if (colorSample[0] == Color.YELLOW) {
-        		turnDirection = -1;
-        	} else if (colorSample[0] == Color.PINK) {
-				turnDirection = 1;
-			}
-        	
-        	//if in distance start turning, use turnDirection to decide which way
-        	if (distanceSample[0] <= APPROACH_DISTANCE)
-        		pilot.arcForward(ARC_INCREMENT * turnDirection);
+
+    private void turn(int angle) {
+        int fullRotationSteps = 360; // Number of motor steps for a full 360-degree turn
+        int rotationCount = (fullRotationSteps * angle) / 360;
+
+        // Rotate the left motor forward and right motor backward for a right turn
+        motorControlBehavior.getLeftMotor().rotate(rotationCount, true);
+        motorControlBehavior.getRightMotor().rotate(-rotationCount);
+    }
+
+    public void turnRight() {
+        if (!hasTurned) {
+            System.out.println("Turning right...");
+
+            // Stop motors before turning
+            motorControlBehavior.stopMotors();
+
+            // Turn 90 degrees right
+            turn(ROTATION_ANGLE);
+
+            // Stop motors after turn is complete
+            motorControlBehavior.stopMotors();
+
+            try {
+                Thread.sleep(500); // Small delay to stabilize
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            // Resume forward motion
+            motorControlBehavior.startMotors();
+
+            hasTurned = true;
         }
     }
-	
-    @Override
-    public void suppress() {
-        suppressed = true;  //higher priority process takes over with this call
+
+    public void stopRobot() {
+        System.out.println("Halting Robot");
+        motorControlBehavior.stopMotors();
+
+        // Stay stopped while black is still detected
+        while (true) {
+            String detectedColor = colorDetectionBehavior.getDetectedColor();
+            System.out.println("Detected color: " + detectedColor);  // Debugging line
+
+            if ("BLACK".equals(detectedColor)) {
+                // Only stop if black is detected
+                try {
+                    Thread.sleep(100); // Small delay to avoid CPU overload
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                // If it's not black, break out of the loop
+                break;
+            }
+        }
+
+        System.out.println("No longer detecting BLACK. Resuming movement...");
+        motorControlBehavior.startMotors(); // Resume forward motion after black is gone
+    }
+
+    // Reset the turn flag to allow future turning
+    public void resetTurn() {
+        hasTurned = false;
     }
 }

@@ -17,7 +17,7 @@ public class ObstacleDetectionBehavior {
         ultraSensor.getDistanceMode().fetchSample(distance, 0);
         if (distance[0] < 0.2) {
             motorControlBehavior.stopMotors();
-            System.out.println("Obstacle detected. Stopping.");
+            //System.out.println("Obstacle detected. Stopping.");
             try {
                 Thread.sleep(1000); //Wait for 1 second after obstacle - keep checking via thread
             } catch (InterruptedException e) {
