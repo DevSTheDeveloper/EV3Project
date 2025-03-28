@@ -1,8 +1,7 @@
 package EV3;
 
 public class TurnBehavior {
-    private static final int ROTATION_ANGLE = 90;  // Desired turn angle (in degrees)
-    private boolean hasTurned = false;
+    private static final int ROTATION_ANGLE = 180; // Desired turn angle (in degrees)
     private MotorControlBehavior motorControlBehavior;
     private ColorDetectionBehavior colorDetectionBehavior;
 
@@ -20,32 +19,54 @@ public class TurnBehavior {
         motorControlBehavior.getRightMotor().rotate(-rotationCount);
     }
 
-    public void turnRight() {
-        if (!hasTurned) {
-            System.out.println("Turning right...");
-
-            // Stop motors before turning
-            motorControlBehavior.stopMotors();
-
-            // Turn 90 degrees right
-            turn(ROTATION_ANGLE);
-
-            // Stop motors after turn is complete
-            motorControlBehavior.stopMotors();
-
-            try {
-                Thread.sleep(500); // Small delay to stabilize
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            // Resume forward motion
-            motorControlBehavior.startMotors();
-
-            hasTurned = true;
+    private void stabilize() {
+        try {
+            Thread.sleep(500); // Stabilization delay
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
+    private void stopMotorsAndWait() {
+        // Stop motors before turning
+        motorControlBehavior.stopMotors();
+        stabilize(); // Ensure stabilization after stop
+    }
+
+    private void startMotors() {
+        motorControlBehavior.startMotors(); // Resume forward motion
+    }
+
+    public void turnRight() {
+        System.out.println("Turning right...");
+
+        stopMotorsAndWait(); // Stop and wait
+
+        // Turn 90 degrees right
+        turn(ROTATION_ANGLE);
+
+        stopMotorsAndWait(); // Stop motors after turn is complete
+
+        // Resume forward motion
+        startMotors();
+    }
+
+    public void turnLeft() {
+        System.out.println("Turning left...");
+
+        stopMotorsAndWait(); // Stop and wait
+
+        // Turn 90 degrees left (using negative rotation for left)
+        turn(-ROTATION_ANGLE);
+
+        stopMotorsAndWait(); // Stop motors after turn is complete
+
+        // Resume forward motion
+        startMotors();
+    }
+
+    // Placeholder method for stopping the robot if necessary in the future
+    /*
     public void stopRobot() {
         System.out.println("Halting Robot");
         motorControlBehavior.stopMotors();
@@ -63,7 +84,6 @@ public class TurnBehavior {
                     e.printStackTrace();
                 }
             } else {
-                // If it's not black, break out of the loop
                 break;
             }
         }
@@ -71,9 +91,5 @@ public class TurnBehavior {
         System.out.println("No longer detecting BLACK. Resuming movement...");
         motorControlBehavior.startMotors(); // Resume forward motion after black is gone
     }
-
-    // Reset the turn flag to allow future turning
-    public void resetTurn() {
-        hasTurned = false;
-    }
+    */
 }

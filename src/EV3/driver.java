@@ -29,21 +29,28 @@ public class driver {
             colorDetectionBehavior.checkColor();
             String detectedColor = colorDetectionBehavior.getDetectedColor();
 
-            //Turn right if green is detected
+            // Turn right if green is detected
             if ("GREEN".equals(detectedColor)) {
                 turnBehavior.turnRight();
             }
 
-            //stop robot if black is detected - doesnt break loop
+            // Turn left if orange is detected
+            if ("ORANGE".equals(detectedColor)) {
+                turnBehavior.turnLeft();
+            }
+
+            // Stop robot if black is detected
+            /*
             if ("BLACK".equals(detectedColor)) {
                 turnBehavior.stopRobot();
-            }
+            }*/
 
             // If ESCAPE is pressed, stop the program
             if (Button.ESCAPE.isDown()) {
                 System.out.println("Program Terminated");
                 break;
             }
+            
         }
 
         colorDetectionBehavior.close(); // Clean up sensor properly
