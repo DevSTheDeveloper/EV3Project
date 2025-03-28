@@ -4,14 +4,13 @@ import lejos.hardware.Button;
 import lejos.hardware.lcd.LCD;
 import lejos.robotics.navigation.MovePilot;
 
-
 public class driver {
+
     private MotorControlBehavior motorControlBehavior;
     private SoundDetectionBehavior soundDetectionBehavior;
     private ObstacleDetectionBehavior obstacleDetectionBehavior;
     private ColorDetectionBehavior colorDetectionBehavior;
     private TurnBehavior turnBehavior;
-    private LowBattery lowBattery;
     private MovePilot pilot;
 
     public driver() {
@@ -20,12 +19,42 @@ public class driver {
         obstacleDetectionBehavior = new ObstacleDetectionBehavior(motorControlBehavior);
         colorDetectionBehavior = new ColorDetectionBehavior();
         turnBehavior = new TurnBehavior(motorControlBehavior, colorDetectionBehavior);
-        
-        lowBattery = new LowBattery(pilot);
     }
 
     public void driverLoop() {
         // Display the startup screen with instructions
+        displayStartScreen();
+
+        // Wait for the Enter button to be pressed
+        waitForEnterPress();
+
+        // Proceed to the main loop after enter is pressed
+        LCD.clear();
+        motorControlBehavior.startMotors();
+
+        // Main driving loop
+        while (true) {
+            // Check sound, obstacle, and color
+            soundDetectionBehavior.checkSound();
+            obstacleDetectionBehavior.checkObstacle();
+            colorDetectionBehavior.checkColor();
+
+            // Get detected color and take action
+            String detectedColor = colorDetectionBehavior.getDetectedColor();
+            handleDetectedColor(detectedColor);
+
+            // Terminate program if Escape button is pressed
+            if (Button.ESCAPE.isDown()) {
+                System.out.println("Program Terminated");
+                break;
+            }
+        }
+
+        // Close color detection behavior at the end
+        colorDetectionBehavior.close();
+    }
+
+    private void displayStartScreen() {
         LCD.clear();
         LCD.drawString("Track Car Project", 0, 2);  // Left-aligned text
         LCD.drawString("By Dev, Arshiya", 0, 3);
@@ -34,52 +63,36 @@ public class driver {
 
         // Add a small delay to give time for the user to see the start screen
         try {
-            Thread.sleep(2000); // 2-second delay (adjust if necessary)
+            Thread.sleep(2000); // 2-second delay
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
 
-        // Wait for the Enter button to be pressed
+    private void waitForEnterPress() {
         while (!Button.ENTER.isDown()) {
-            // Wait here till user clicks the enter button to start
+            // Wait here until the Enter button is pressed
         }
-        
-        //proceed to the main loop after enter is pressed
-        LCD.clear();
-        motorControlBehavior.startMotors();
+    }
 
-        while (true) {
-            if (lowBattery.takeControl()) {
-                lowBattery.action();
-                break;
-            }
-
-            soundDetectionBehavior.checkSound();
-            obstacleDetectionBehavior.checkObstacle();
-            colorDetectionBehavior.checkColor();
-            String detectedColor = colorDetectionBehavior.getDetectedColor();
-
-            if ("GREEN".equals(detectedColor)) {
+    private void handleDetectedColor(String detectedColor) {
+        switch (detectedColor) {
+            case "GREEN":
                 turnBehavior.turnRight();
-            }
-
-            if ("ORANGE".equals(detectedColor)) {
-                turnBehavior.turnLeft();
-            }
-
-            // Stop robot if black is detected
-            /*
-            if ("BLACK".equals(detectedColor)) {
-                turnBehavior.stopRobot();
-            }*/
-
-            if (Button.ESCAPE.isDown()) {
-                System.out.println("Program Terminated");
                 break;
-            }
+            case "ORANGE":
+                turnBehavior.turnLeft();
+                break;
+            // Uncomment to stop robot if black is detected
+            /*
+            case "BLACK":
+                turnBehavior.stopRobot();
+                break;
+            */
+            default:
+                // Do nothing if no recognized color is detected
+                break;
         }
-
-        colorDetectionBehavior.close(); 
     }
 
     public static void main(String[] args) {

@@ -18,7 +18,7 @@ public class SpeedControl implements Runnable {
     private synchronized boolean takeControl() {
         int color = colorSensor.getColorID(); // Use consistent method
         System.out.println("Detected color: " + color); // Debugging output
-        return (color == Color.GREEN || color == Color.ORANGE);
+        return (color == Color.GREEN || color == Color.ORANGE || color == Color.BLUE); // Include blue
     }
 
     private synchronized void action() {
@@ -26,6 +26,7 @@ public class SpeedControl implements Runnable {
         double fastSpeed = 20.0;
         double slowSpeed = 5.0;
         double normalSpeed = 10.0;
+        double blueSpeed = 150.0; // Slow down to 150 when blue is detected
 
         while (!suppressed) {
             int color = colorSensor.getColorID(); // Use consistent method
@@ -33,6 +34,8 @@ public class SpeedControl implements Runnable {
                 pilot.setLinearSpeed(fastSpeed);
             } else if (color == Color.ORANGE) {
                 pilot.setLinearSpeed(slowSpeed);
+            } else if (color == Color.BLUE) {
+                pilot.setLinearSpeed(blueSpeed); // Slow speed for blue
             } else {
                 pilot.setLinearSpeed(normalSpeed);
             }
