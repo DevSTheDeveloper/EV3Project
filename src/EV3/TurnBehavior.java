@@ -1,7 +1,7 @@
 package EV3;
-
+//By Faris
 public class TurnBehavior {
-    private static final int ROTATION_ANGLE = 180; // Desired turn angle (in degrees)
+    private static final int ROTATION_ANGLE = 180; //180 is 90* in real world with robot
     private MotorControlBehavior motorControlBehavior;
     private ColorDetectionBehavior colorDetectionBehavior;
 
@@ -10,86 +10,71 @@ public class TurnBehavior {
         this.colorDetectionBehavior = colorDetectionBehavior;
     }
 
+    // Method to perform the turn
     private void turn(int angle) {
-        int fullRotationSteps = 360; // Number of motor steps for a full 360-degree turn
-        int rotationCount = (fullRotationSteps * angle) / 360;
+        // Steps per rotation for a full 360-degree turn
+        int fullRotationSteps = 360;
+        //int rotationCount = (fullRotationSteps * angle) / 360; - For debug
 
-        // Rotate the left motor forward and right motor backward for a right turn
-        motorControlBehavior.getLeftMotor().rotate(rotationCount, true);
-        motorControlBehavior.getRightMotor().rotate(-rotationCount);
+
+        if (angle > 0) {
+            // Right turn
+            motorControlBehavior.getLeftMotor().rotate(180, true);  
+            motorControlBehavior.getRightMotor().rotate(-180);
+        } else {
+            // Left turn (negative angle)
+            motorControlBehavior.getLeftMotor().rotate(-180, true); 
+            motorControlBehavior.getRightMotor().rotate(180);
+        }
+
+        stabilize(); // Ensure stabilization after turn
     }
 
+    // Stabilization after turn
     private void stabilize() {
         try {
-            Thread.sleep(500); // Stabilization delay
+            Thread.sleep(500); // Allow time for the robot to settle
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
+    // Stop motors and wait before turning
     private void stopMotorsAndWait() {
-        // Stop motors before turning
-        motorControlBehavior.stopMotors();
+        motorControlBehavior.stopMotors(); // Stop motors before turning
+        System.out.println("Motors stopped."); // Debugging output
         stabilize(); // Ensure stabilization after stop
     }
 
+    // Start motors to continue forward
     private void startMotors() {
         motorControlBehavior.startMotors(); // Resume forward motion
+        System.out.println("Motors started."); // Debugging output
     }
 
+    // Method to turn right by 180 degrees
     public void turnRight() {
         System.out.println("Turning right...");
 
-        stopMotorsAndWait(); // Stop and wait
+        stopMotorsAndWait(); // Stop before turning
 
-        // Turn 90 degrees right
-        turn(ROTATION_ANGLE);
+        turn(ROTATION_ANGLE); // Turn right (180 degrees)
 
-        stopMotorsAndWait(); // Stop motors after turn is complete
+        stopMotorsAndWait(); // Stop motors after turn
 
-        // Resume forward motion
-        startMotors();
+        startMotors(); // Resume forward motion
     }
 
+    // Method to turn left by 180 degrees
     public void turnLeft() {
         System.out.println("Turning left...");
 
-        stopMotorsAndWait(); // Stop and wait
+        stopMotorsAndWait(); // Stop before turning
 
-        // Turn 90 degrees left (using negative rotation for left)
-        turn(-ROTATION_ANGLE);
+        turn(-ROTATION_ANGLE); // Turn left (negative 180 degrees)
 
-        stopMotorsAndWait(); // Stop motors after turn is complete
+        stopMotorsAndWait(); // Stop motors after turn
 
-        // Resume forward motion
-        startMotors();
+        startMotors(); // Resume forward motion
     }
-
-    // Placeholder method for stopping the robot if necessary in the future
-    /*
-    public void stopRobot() {
-        System.out.println("Halting Robot");
-        motorControlBehavior.stopMotors();
-
-        // Stay stopped while black is still detected
-        while (true) {
-            String detectedColor = colorDetectionBehavior.getDetectedColor();
-            System.out.println("Detected color: " + detectedColor);  // Debugging line
-
-            if ("BLACK".equals(detectedColor)) {
-                // Only stop if black is detected
-                try {
-                    Thread.sleep(100); // Small delay to avoid CPU overload
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                break;
-            }
-        }
-
-        System.out.println("No longer detecting BLACK. Resuming movement...");
-        motorControlBehavior.startMotors(); // Resume forward motion after black is gone
-    }
-    */
 }
