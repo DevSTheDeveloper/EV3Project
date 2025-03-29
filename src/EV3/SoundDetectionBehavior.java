@@ -33,11 +33,18 @@ public class SoundDetectionBehavior {
                 motorControlBehavior.startMotors();
                 isStopped = false; //mark the robot as moving
             }
+
+            //add a small delay before allowing another clap to be detected
+            try {
+                Thread.sleep(1000);  // 1 second delay
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
 
-        //reset clap flag if the sound level goes below the threshold
+        // Reset clap detection if the sound level goes below the threshold
         if (soundLevel[0] <= SOUND_THRESHOLD) {
-            isClapDetected = false;  //allow the next clap to be detected
+            isClapDetected = false;  // Allow the next clap to be detected
         }
     }
 }
