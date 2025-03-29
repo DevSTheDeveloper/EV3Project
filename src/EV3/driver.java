@@ -34,7 +34,7 @@ public class driver {
             obstacleDetectionBehavior.checkObstacle();
             colorDetectionBehavior.checkColor();
             
-            //retrieves the currently detected colour, handleDetectedColor will call the specific function for it
+            //retrieves the currently detected colour, h
             String detectedColor = colorDetectionBehavior.getDetectedColor();
             handleDetectedColor(detectedColor);
 

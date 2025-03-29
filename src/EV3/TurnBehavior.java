@@ -26,7 +26,7 @@ public class TurnBehavior {
 
     private void stabilize() {
         try {
-            Thread.sleep(500); //Allows system to settle
+            Thread.sleep(500); //allows system to settle - testing showed without it would get innaccurate turns
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
