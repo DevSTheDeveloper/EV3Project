@@ -34,17 +34,18 @@ public class SoundDetectionBehavior {
                 isStopped = false; //mark the robot as moving
             }
 
-            //add a small delay before allowing another clap to be detected
+            //NOTE: THE CODE WILL NOT WORK WITHOUT THIS  
+            //IF THERE IS NO GAP THE FLAG WILL NOT SWITCH AND WILL REMAIN IN THE SAME STATE
             try {
-                Thread.sleep(1000);  // 1 second delay
+                Thread.sleep(1000);  //ensure a 1 second delay between claps
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
         }
 
-        // Reset clap detection if the sound level goes below the threshold
+        //reset clap detection if the sound level goes below the threshold
         if (soundLevel[0] <= SOUND_THRESHOLD) {
-            isClapDetected = false;  // Allow the next clap to be detected
+            isClapDetected = false;  //reset clap flag
         }
     }
 }

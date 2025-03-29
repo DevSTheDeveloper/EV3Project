@@ -1,12 +1,13 @@
 package EV3;
-//By Dev - This will be called by the TurnBehaviour to perform the 180 Deg Rotation
+//Uses the ClapFilter Class by Dave Cohen (cyclingProfessor on github 
+
 import lejos.robotics.SampleProvider;
 
 public class ClapListener implements SampleProvider {
     private final float threshold;
     private final int timeGap;
-    private final SampleProvider ss;
-    private long lastHeard;
+    private final SampleProvider ss; //the sound sensor's SampleProvider to fetch the sound level
+    private long lastHeard; //stores the time (in milliseconds) when the last clap was detected
 
     public ClapListener(SampleProvider ss, float level, int gap) {
         this.timeGap = gap;
@@ -15,9 +16,8 @@ public class ClapListener implements SampleProvider {
         lastHeard = -2 * timeGap;
     }
 
-    @Override
     public void fetchSample(float[] level, int index) {
-        level[index] = 0.0f;
+        level[index] = 0.0f; //resets the sound level
         long now = System.currentTimeMillis();
         if (now - lastHeard > timeGap) {
             ss.fetchSample(level, index);
@@ -28,7 +28,6 @@ public class ClapListener implements SampleProvider {
         }
     }
 
-    @Override
     public int sampleSize() {
         return 1;
     }

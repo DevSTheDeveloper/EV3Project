@@ -34,13 +34,13 @@ public class driver {
             obstacleDetectionBehavior.checkObstacle();
             colorDetectionBehavior.checkColor();
             
-            //retrieves the currently detected colour, h
+            //retrieves the currently detected colour and then calls the function it is linked to
+            //IE - Green --> TurnRight();
             String detectedColor = colorDetectionBehavior.getDetectedColor();
             handleDetectedColor(detectedColor);
 
-            // Terminate program if Escape button is pressed
             if (Button.ESCAPE.isDown()) {
-                System.out.println("Program Terminated");
+                System.out.println("Ending Processes");
                 break;
             }
         }
@@ -72,7 +72,7 @@ public class driver {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) { 
         driver driver = new driver();
         driver.driverLoop();
     }

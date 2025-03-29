@@ -44,7 +44,7 @@ public class TurnBehavior {
     }
 
     public void turnRight() {
-        System.out.println("Turning right...");
+        System.out.println("Turning right");
 
         stopMotorsAndWait(); 
 
@@ -56,7 +56,7 @@ public class TurnBehavior {
     }
 
     public void turnLeft() {
-        System.out.println("Turning left...");
+        System.out.println("Turning left");
 
         stopMotorsAndWait(); 
 

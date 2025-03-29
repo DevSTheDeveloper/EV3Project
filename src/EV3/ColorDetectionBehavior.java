@@ -18,7 +18,6 @@ public class ColorDetectionBehavior {
         sample = new float[colorProvider.sampleSize()];
         
         colorMap = new HashMap<>();
-        //Right and Left turning colours
         colorMap.put("GREEN", new float[]{0.03f, 0.15f, 0.04f});
         colorMap.put("ORANGE", new float[]{0.21f, 0.07f, 0.03f});
         colorMap.put("BLACK", new float[]{0.01f, 0.01f, 0.02f}); 
@@ -36,7 +35,7 @@ public class ColorDetectionBehavior {
    
 
     private String detectColor(float r, float g, float b) {
-        float tolerance = 0.05f; //tolerance - 0.05 is to adjust for lighting conditions
+        float tolerance = 0.05f; //tolerance is 0.05 to account for different lighting conditions 
         for (String color : colorMap.keySet()) {
             float[] target = colorMap.get(color);
             if (Math.abs(r - target[0]) <= tolerance &&
@@ -45,7 +44,7 @@ public class ColorDetectionBehavior {
                 return color;
             }
         }
-        return "UNKNOWN"; //Used for testing - System ignores anything that is not in the hashmap 
+        return "UNKNOWN"; //System ignores anything that is not in the hashmap -  else continue on
     }
     
 

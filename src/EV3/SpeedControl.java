@@ -1,5 +1,5 @@
 package EV3;
-//* @author Farris
+//By Faris
 
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.robotics.Color;
@@ -35,7 +35,7 @@ public class SpeedControl implements Runnable {
             } else if (color == Color.ORANGE) {
                 pilot.setLinearSpeed(slowSpeed);
             
-            //NOTE by Dev: The blue speed control may not be used due to colorReader sensitivity
+            //The blue speed control may not be used due to colorReader sensitivity - Keeping it here wont affect the program
             } else if (color == Color.BLUE) { 
                 pilot.setLinearSpeed(blueSpeed); 
             } else {
