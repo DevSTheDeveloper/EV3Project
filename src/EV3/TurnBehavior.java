@@ -1,7 +1,7 @@
 package EV3;
-//By Faris
+//By Patrick, Rotation Modified by Dev  (173 degrees = approx 90 for robot turn)
 public class TurnBehavior {
-    private static final int ROTATION_ANGLE = 180; //180 is 90* in real world with robot
+    private static final int ROTATION_ANGLE = 173; //as close as i can get to a 90 deg turn
     private MotorControlBehavior motorControlBehavior;
     private ColorDetectionBehavior colorDetectionBehavior;
 
@@ -10,71 +10,59 @@ public class TurnBehavior {
         this.colorDetectionBehavior = colorDetectionBehavior;
     }
 
-    // Method to perform the turn
     private void turn(int angle) {
-        // Steps per rotation for a full 360-degree turn
-        int fullRotationSteps = 360;
-        //int rotationCount = (fullRotationSteps * angle) / 360; - For debug
-
-
         if (angle > 0) {
             // Right turn
-            motorControlBehavior.getLeftMotor().rotate(180, true);  
-            motorControlBehavior.getRightMotor().rotate(-180);
+            motorControlBehavior.getLeftMotor().rotate(173, true);  
+            motorControlBehavior.getRightMotor().rotate(-173);
         } else {
             // Left turn (negative angle)
-            motorControlBehavior.getLeftMotor().rotate(-180, true); 
-            motorControlBehavior.getRightMotor().rotate(180);
+            motorControlBehavior.getLeftMotor().rotate(-173, true); 
+            motorControlBehavior.getRightMotor().rotate(173);
         }
 
-        stabilize(); // Ensure stabilization after turn
+        stabilize();
     }
 
-    // Stabilization after turn
     private void stabilize() {
         try {
-            Thread.sleep(500); // Allow time for the robot to settle
+            Thread.sleep(500); //Allows system to settle
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
-    // Stop motors and wait before turning
     private void stopMotorsAndWait() {
-        motorControlBehavior.stopMotors(); // Stop motors before turning
-        System.out.println("Motors stopped."); // Debugging output
-        stabilize(); // Ensure stabilization after stop
+        motorControlBehavior.stopMotors(); 
+        System.out.println("Motors stopped"); 
+        stabilize(); 
     }
 
-    // Start motors to continue forward
     private void startMotors() {
-        motorControlBehavior.startMotors(); // Resume forward motion
-        System.out.println("Motors started."); // Debugging output
+        motorControlBehavior.startMotors(); 
+        System.out.println("Motors started"); 
     }
 
-    // Method to turn right by 180 degrees
     public void turnRight() {
         System.out.println("Turning right...");
 
-        stopMotorsAndWait(); // Stop before turning
+        stopMotorsAndWait(); 
 
-        turn(ROTATION_ANGLE); // Turn right (180 degrees)
+        turn(ROTATION_ANGLE); //turn right 
 
-        stopMotorsAndWait(); // Stop motors after turn
+        stopMotorsAndWait(); //stop motors after turn
 
-        startMotors(); // Resume forward motion
+        startMotors(); 
     }
 
-    // Method to turn left by 180 degrees
     public void turnLeft() {
         System.out.println("Turning left...");
 
-        stopMotorsAndWait(); // Stop before turning
+        stopMotorsAndWait(); 
 
-        turn(-ROTATION_ANGLE); // Turn left (negative 180 degrees)
+        turn(-ROTATION_ANGLE); 
 
-        stopMotorsAndWait(); // Stop motors after turn
-
-        startMotors(); // Resume forward motion
+        stopMotorsAndWait(); 
+        startMotors(); 
     }
 }

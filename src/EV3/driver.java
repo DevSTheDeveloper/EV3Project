@@ -1,19 +1,18 @@
 package EV3;
-
+//By Devannsh - This is the main class which calls the other behaviours
 import lejos.hardware.Button;
 import lejos.hardware.lcd.LCD;
 import lejos.robotics.navigation.MovePilot;
 
 public class driver {
 
-    private MotorControlBehavior motorControlBehavior;
+    private MotorControlBehavior motorControlBehavior; //used instead of pilot
     private SoundDetectionBehavior soundDetectionBehavior;
     private ObstacleDetectionBehavior obstacleDetectionBehavior;
     private ColorDetectionBehavior colorDetectionBehavior;
     private TurnBehavior turnBehavior;
-    private MovePilot pilot;
 
-    public driver() {
+    public driver() { //initialise behaviours 
         motorControlBehavior = new MotorControlBehavior();
         soundDetectionBehavior = new SoundDetectionBehavior(motorControlBehavior);
         obstacleDetectionBehavior = new ObstacleDetectionBehavior(motorControlBehavior);
@@ -22,24 +21,20 @@ public class driver {
     }
 
     public void driverLoop() {
-        // Display the startup screen with instructions
         displayStartScreen();
-
-        // Wait for the Enter button to be pressed
+        //wait for the Enter button to be pressed
         waitForEnterPress();
-
-        // Proceed to the main loop after enter is pressed
+        //proceed to the main loop after enter is pressed
         LCD.clear();
         motorControlBehavior.startMotors();
 
-        // Main driving loop
+        //Main driving loop
         while (true) {
-            // Check sound, obstacle, and color
             soundDetectionBehavior.checkSound();
             obstacleDetectionBehavior.checkObstacle();
             colorDetectionBehavior.checkColor();
-
-            // Get detected color and take action
+            
+            //retrieves the currently detected colour, handleDetectedColor will call the specific function for it
             String detectedColor = colorDetectionBehavior.getDetectedColor();
             handleDetectedColor(detectedColor);
 
@@ -50,48 +45,30 @@ public class driver {
             }
         }
 
-        // Close color detection behavior at the end
         colorDetectionBehavior.close();
     }
 
-    private void displayStartScreen() {
+    private void displayStartScreen() { //show at start
         LCD.clear();
-        LCD.drawString("Track Car Project", 0, 2);  // Left-aligned text
+        LCD.drawString("Track Car Project", 0, 2);  
         LCD.drawString("By Dev, Arshiya", 0, 3);
         LCD.drawString("Patrick & Faris", 0, 4);
-        LCD.drawString("Press Enter", 0, 5);  // Instructions for the user
-
-        // Add a small delay to give time for the user to see the start screen
-        try {
-            Thread.sleep(2000); // 2-second delay
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        LCD.drawString("Press Enter", 0, 5);  
     }
 
     private void waitForEnterPress() {
         while (!Button.ENTER.isDown()) {
-            // Wait here until the Enter button is pressed
+            //wait here until the Enter button is pressed
         }
     }
 
     private void handleDetectedColor(String detectedColor) {
-        switch (detectedColor) {
-            case "GREEN":
-                turnBehavior.turnRight();
-                break;
-            case "ORANGE":
-                turnBehavior.turnLeft();
-                break;
-            // Uncomment to stop robot if black is detected
-            /*
-            case "BLACK":
-                turnBehavior.stopRobot();
-                break;
-            */
-            default:
-                // Do nothing if no recognized color is detected
-                break;
+        if (detectedColor.equals("GREEN")) {
+            turnBehavior.turnRight();
+        } else if (detectedColor.equals("ORANGE")) {
+            turnBehavior.turnLeft();
+        } else {
+            //do nothing for any other colours
         }
     }
 

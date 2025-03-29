@@ -16,9 +16,9 @@ public class SpeedControl implements Runnable {
     }
 
     private synchronized boolean takeControl() {
-        int color = colorSensor.getColorID(); // Use consistent method
-        System.out.println("Detected color: " + color); // Debugging output
-        return (color == Color.GREEN || color == Color.ORANGE || color == Color.BLUE); // Include blue
+        int color = colorSensor.getColorID(); 
+        System.out.println("Detected color: " + color); 
+        return (color == Color.GREEN || color == Color.ORANGE || color == Color.BLUE);
     }
 
     private synchronized void action() {
@@ -26,27 +26,21 @@ public class SpeedControl implements Runnable {
         double fastSpeed = 20.0;
         double slowSpeed = 5.0;
         double normalSpeed = 10.0;
-        double blueSpeed = 150.0; // Slow down to 150 when blue is detected
+        double blueSpeed = 150.0; 
 
         while (!suppressed) {
-            int color = colorSensor.getColorID(); // Use consistent method
+            int color = colorSensor.getColorID(); 
             if (color == Color.GREEN) {
                 pilot.setLinearSpeed(fastSpeed);
             } else if (color == Color.ORANGE) {
                 pilot.setLinearSpeed(slowSpeed);
-            } else if (color == Color.BLUE) {
-                pilot.setLinearSpeed(blueSpeed); // Slow speed for blue
+            } else if (color == Color.BLUE) { //If blue detected (may not be used in final)
+                pilot.setLinearSpeed(blueSpeed); 
             } else {
                 pilot.setLinearSpeed(normalSpeed);
             }
 
             pilot.forward();
-
-            try {
-                Thread.sleep(50); // Faster feedback loop
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
         }
 
         pilot.stop();
@@ -56,16 +50,10 @@ public class SpeedControl implements Runnable {
         suppressed = true;
     }
 
-    @Override
     public void run() {
         while (true) {
             if (takeControl()) {
                 action();
-            }
-            try {
-                Thread.sleep(100); // Slightly shorter interval
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
             }
         }
     }

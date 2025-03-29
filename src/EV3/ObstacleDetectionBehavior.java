@@ -19,7 +19,7 @@ public class ObstacleDetectionBehavior {
             motorControlBehavior.stopMotors();
             //System.out.println("Obstacle detected. Stopping.");
             try {
-                Thread.sleep(1000); //Wait for 1 second after obstacle - keep checking via thread
+                Thread.sleep(1000); //wait before checking again - testing without this caused robot to creep forward 
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }

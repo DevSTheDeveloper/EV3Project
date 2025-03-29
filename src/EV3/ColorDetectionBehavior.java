@@ -1,5 +1,5 @@
 package EV3;
-
+//By Dev
 import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.robotics.SampleProvider;
@@ -10,19 +10,17 @@ public class ColorDetectionBehavior {
     private SampleProvider colorProvider;
     private float[] sample;
     private HashMap<String, float[]> colorMap;
-    private String detectedColor = "UNKNOWN";  // Store detected color
-    
+    private String detectedColor = "UNKNOWN";  //store currently detected colour
+    //temp keep it as unknown 
     public ColorDetectionBehavior() {
         colorSensor = new EV3ColorSensor(SensorPort.S1);
         colorProvider = colorSensor.getRGBMode();
         sample = new float[colorProvider.sampleSize()];
         
-        // Initialize color map with known RGB values
         colorMap = new HashMap<>();
         colorMap.put("GREEN", new float[]{0.03f, 0.15f, 0.04f});
         colorMap.put("ORANGE", new float[]{0.21f, 0.07f, 0.03f});
         colorMap.put("BLACK", new float[]{0.01f, 0.01f, 0.02f});
-        // Add other colors as needed
     }
 
     public void checkColor() {
@@ -35,7 +33,7 @@ public class ColorDetectionBehavior {
     }
 
     private String detectColor(float r, float g, float b) {
-        float tolerance = 0.05f; // Adjust tolerance as needed
+        float tolerance = 0.05f; //tolerance - 0.05 is to adjust for lighting conditions
         for (String color : colorMap.keySet()) {
             float[] target = colorMap.get(color);
             if (Math.abs(r - target[0]) <= tolerance &&
