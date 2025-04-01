@@ -1,5 +1,4 @@
 package EV3;
-//By Dev, Patrick and Arshiya
 import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.robotics.SampleProvider;
@@ -16,7 +15,7 @@ public class ColorDetectionBehavior {
         colorSensor = new EV3ColorSensor(SensorPort.S1);
         colorProvider = colorSensor.getRGBMode();
         sample = new float[colorProvider.sampleSize()];
-        
+        //hashmap we created from manually reading sensor data from console 
         colorMap = new HashMap<>();
         colorMap.put("GREEN", new float[]{0.03f, 0.15f, 0.04f});
         colorMap.put("ORANGE", new float[]{0.21f, 0.07f, 0.03f});

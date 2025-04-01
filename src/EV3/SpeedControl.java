@@ -35,7 +35,6 @@ public class SpeedControl implements Runnable {
             } else if (color == Color.ORANGE) {
                 pilot.setLinearSpeed(slowSpeed);
             
-            //The blue speed control may not be used due to colorReader sensitivity - Keeping it here wont affect the program
             } else if (color == Color.BLUE) { 
                 pilot.setLinearSpeed(blueSpeed); 
             } else {

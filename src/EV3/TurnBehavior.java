@@ -1,5 +1,5 @@
 package EV3;
-//By Patrick, Rotation Modified by Dev  (173 degrees = approx 90 for robot turn)
+//By Patrick
 public class TurnBehavior {
     private static final int ROTATION_ANGLE = 173; //as close as i can get to a 90 deg turn
     private MotorControlBehavior motorControlBehavior;
