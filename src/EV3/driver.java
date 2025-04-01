@@ -1,5 +1,6 @@
 package EV3;
 //By Devannsh - This is the main class which calls the other behaviours
+//TESTING NOTE: RUNTIME ERRORS MAY BE CAUSED BY LOOSE CONNECTIONS - PUSH IN ALL SENSORS INTO THE PORTS AGAIN 
 import lejos.hardware.Button;
 import lejos.hardware.lcd.LCD;
 import lejos.robotics.navigation.MovePilot;

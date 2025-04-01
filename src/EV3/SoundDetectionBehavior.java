@@ -20,16 +20,16 @@ public class SoundDetectionBehavior {
 
     public void checkSound() {
         soundSampleProvider.fetchSample(soundLevel, 0);
-        
+        //soundLevel[0] = current SoundLevel
         if (soundLevel[0] > SOUND_THRESHOLD && !isClapDetected) {
             isClapDetected = true;  //flag that clap was detected
             
             if (!isStopped) {
-                System.out.println("Clap detected! Stopping motors.");
+                System.out.println("Clap detected - Stopping motors");
                 motorControlBehavior.stopMotors();
                 isStopped = true;  //mark the robot as stopped
             } else {
-                System.out.println("Clap detected! Resuming movement.");
+                System.out.println("Clap detected - Resuming movement");
                 motorControlBehavior.startMotors();
                 isStopped = false; //mark the robot as moving
             }

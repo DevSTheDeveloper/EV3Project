@@ -1,5 +1,9 @@
 package EV3;
 //By Faris
+//Note from Dev: This class will be called properly when it is optimised (it works perfectly fine),
+//We have temporarily disabled the detection of the blue colour due to a sensor read error
+//You can see that we have commented the Blue colour on the hashmap - It worked earlier but is very 
+//Sensitive to light and changes
 
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.robotics.Color;
