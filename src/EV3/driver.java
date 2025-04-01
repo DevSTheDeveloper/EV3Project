@@ -1,42 +1,39 @@
 package EV3;
 //By Devannsh - This is the main class which calls the other behaviours
-//TESTING NOTE: RUNTIME ERRORS MAY BE CAUSED BY LOOSE CONNECTIONS - PUSH IN ALL SENSORS INTO THE PORTS AGAIN 
+
 import lejos.hardware.Button;
 import lejos.hardware.lcd.LCD;
-import lejos.robotics.navigation.MovePilot;
 
 public class driver {
 
-    private MotorControlBehavior motorControlBehavior; //used instead of pilot
+    private MotorControlBehavior motorControlBehavior; // Used instead of pilot
     private SoundDetectionBehavior soundDetectionBehavior;
     private ObstacleDetectionBehavior obstacleDetectionBehavior;
     private ColorDetectionBehavior colorDetectionBehavior;
     private TurnBehavior turnBehavior;
+    private SpeedControl speedControl; //added SpeedControl behavior
 
-    public driver() { //initialise behaviours 
+    public driver() {
         motorControlBehavior = new MotorControlBehavior();
         soundDetectionBehavior = new SoundDetectionBehavior(motorControlBehavior);
         obstacleDetectionBehavior = new ObstacleDetectionBehavior(motorControlBehavior);
         colorDetectionBehavior = new ColorDetectionBehavior();
         turnBehavior = new TurnBehavior(motorControlBehavior, colorDetectionBehavior);
+
+        speedControl = new SpeedControl(motorControlBehavior, colorDetectionBehavior);
     }
 
     public void driverLoop() {
         displayStartScreen();
-        //wait for the Enter button to be pressed
         waitForEnterPress();
-        //proceed to the main loop after enter is pressed
         LCD.clear();
         motorControlBehavior.startMotors();
 
-        //Main driving loop
         while (true) {
             soundDetectionBehavior.checkSound();
             obstacleDetectionBehavior.checkObstacle();
             colorDetectionBehavior.checkColor();
             
-            //retrieves the currently detected colour and then calls the function it is linked to
-            //IE - Green --> TurnRight();
             String detectedColor = colorDetectionBehavior.getDetectedColor();
             handleDetectedColor(detectedColor);
 
@@ -49,7 +46,7 @@ public class driver {
         colorDetectionBehavior.close();
     }
 
-    private void displayStartScreen() { //show at start
+    private void displayStartScreen() {
         LCD.clear();
         LCD.drawString("Track Car Project", 0, 2);  
         LCD.drawString("By Dev, Arshiya", 0, 3);
@@ -65,16 +62,18 @@ public class driver {
 
     private void handleDetectedColor(String detectedColor) {
         if (detectedColor.equals("GREEN")) {
-            turnBehavior.turnRight();
+            turnBehavior.turnRight();  //from turn behaviour for L and R
         } else if (detectedColor.equals("ORANGE")) {
-            turnBehavior.turnLeft();
-        } else {
-            //do nothing for any other colours
+            turnBehavior.turnLeft(); 
+        } else if (detectedColor.equals("BLUE")) {
+            //if Blue is detected, speed up (handled by SpeedControl)
+            System.out.println("Blue detected - Speeding up to 150");
+            speedControl.run(); //call the run method from SpeedControl 
         }
     }
 
     public static void main(String[] args) { 
         driver driver = new driver();
-        driver.driverLoop();
+        driver.driverLoop(); //init new driver obj and call main loop
     }
 }

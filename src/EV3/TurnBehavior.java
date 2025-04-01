@@ -12,11 +12,11 @@ public class TurnBehavior {
 
     private void turn(int angle) {
         if (angle > 0) {
-            // Right turn
+            //right turn
             motorControlBehavior.getLeftMotor().rotate(173, true);  
             motorControlBehavior.getRightMotor().rotate(-173);
         } else {
-            // Left turn (negative angle)
+            //left turn (negative angle)
             motorControlBehavior.getLeftMotor().rotate(-173, true); 
             motorControlBehavior.getRightMotor().rotate(173);
         }

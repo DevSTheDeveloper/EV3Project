@@ -1,5 +1,5 @@
 package EV3;
-// by devannsh and Arshiya 
+//by devannsh and Arshiya 
 
 import lejos.hardware.sensor.EV3UltrasonicSensor;
 
