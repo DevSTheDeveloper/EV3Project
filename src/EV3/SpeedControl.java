@@ -7,15 +7,14 @@ package EV3;
 
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.robotics.Color;
-import lejos.robotics.navigation.MovePilot;
 
 public class SpeedControl implements Runnable {
-    private final MovePilot pilot;
+    private final MotorControlBehavior motorControlBehavior; // Use MotorControlBehavior instead of MovePilot
     private final EV3ColorSensor colorSensor;
     private boolean suppressed = false;
 
-    public SpeedControl(MovePilot pilot, EV3ColorSensor colorSensor) {
-        this.pilot = pilot;
+    public SpeedControl(MotorControlBehavior motorControlBehavior, EV3ColorSensor colorSensor) {
+        this.motorControlBehavior = motorControlBehavior;
         this.colorSensor = colorSensor;
     }
 
@@ -27,29 +26,27 @@ public class SpeedControl implements Runnable {
 
     private synchronized void action() {
         suppressed = false;
-        double fastSpeed = 20.0;
-        double slowSpeed = 5.0;
-        double normalSpeed = 10.0;
-        double blueSpeed = 150.0; 
+        int fastSpeed = 300;  // Adjusted to work with the motor speeds
+        int slowSpeed = 100;
+        int normalSpeed = 200;
+        int blueSpeed = 150;
 
         while (!suppressed) {
             int color = colorSensor.getColorID(); 
             if (color == Color.GREEN) {
-                pilot.setLinearSpeed(fastSpeed);
+                motorControlBehavior.setSpeed(fastSpeed);
             } else if (color == Color.ORANGE) {
-                pilot.setLinearSpeed(slowSpeed);
-            
+                motorControlBehavior.setSpeed(slowSpeed);
             } else if (color == Color.BLUE) { 
-                pilot.setLinearSpeed(blueSpeed); 
+                motorControlBehavior.setSpeed(blueSpeed); 
             } else {
-                pilot.setLinearSpeed(normalSpeed);
+                motorControlBehavior.setSpeed(normalSpeed);
             }
-            
 
-            pilot.forward();
+            motorControlBehavior.startMotors(); // Use the method to start motors
         }
 
-        pilot.stop();
+        motorControlBehavior.stopMotors(); // Stop the motors when suppressed
     }
 
     public void suppress() {
